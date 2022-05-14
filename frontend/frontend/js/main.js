@@ -11,7 +11,7 @@ window.onload = () => {
               
                  let data = peliculas.data;
              
-                 data.forEach((movie) => {
+                 data.forEach((movie,idx) => {
                    const card = document.createElement("div");
                    card.setAttribute("class", "card");
              
@@ -23,6 +23,13 @@ window.onload = () => {
              
                    const duracion = document.createElement("p");
                    duracion.textContent = `Duración: ${movie.length}`;
+
+                   const detalle = document.createElement("p");
+                   detalle.setAttribute('class','detalle')
+                   detalle.textContent=`ver detalle de ${movie.title}, id: ${movie.id}`
+           
+              
+                     
              
                    container.appendChild(card);
                    card.appendChild(h1);
@@ -33,9 +40,37 @@ window.onload = () => {
                      card.appendChild(genero);
                    }
                    card.appendChild(duracion);
-                 });
-              
-            })
+                   card.appendChild(detalle)
+            
+                   
+                  });
+                  
+                  let botones=document.querySelectorAll(".detalle")
+                  for (let i=0;i< botones.length;i++){
+                    botones[i].addEventListener('click',e=>{                  
+                   
+                    
+                     let id= e.target.innerText.slice(-2)
+                   
+                      fetch(`http://localhost:3031/api/movies/${id}`)
+                        .then(respuesta=>respuesta.json())
+                        .then(movie=> {
+                          // window.location.href='formulario.html'  
+                          window.location.replace(`formulario.html` )
+                    
+                          document.querySelector('#title').value=movie.title
+                          document.querySelector('#rating').value=movie.rating
+                          document.querySelector('#awards').value=movie.awards
+                          document.querySelector('#release_date').value=movie.release_date
+                          document.querySelector('#length').value=movie.length
+                                    
+
+                     
+                        })
+                    })
+                  }
+                })
+     
 
 
 };
